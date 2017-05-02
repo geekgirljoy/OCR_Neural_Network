@@ -2,132 +2,132 @@
 
 /*
     NewImage( 
-	          (int)$char, 
-	          (mixed)$curr_image, 
-			  (int)$x , 
-			  (int)$y, 
-			  (file resource)$logfile
-			);
-	
-	Description: 
-	
-	This function actually creates the images. 
-	
-	It is written with an iterative process in mind where more than a single training image (batch creation) would be generated however a single image can be generated if you prefer.
-	
-	I have created the GenerateTrainingImages() function that will call this function for you so you *could*
-	ignore this function but its the one that does the real work. 
-		
-	$char uses the chr() function to convert the number passed to an ASCII character.
-	
-	$curr_image is a mixed type variable used to name the image that is being generated. In this
-	case (i.e how I used it in GenerateTrainingImages()) I have used it as a number so it's easy to 
-	iterate over the image files using a simple for loop to programmatically create the images we
-    need however you could create an array of strings or chars and use those instead however that is
-	not quite as simple as the implementation shown here.
-	
-	$x & $y are direct pass-through variables for the x & y coordinate placement variables as defined
-	in the imagestring() function documentation: http://php.net/manual/en/function.imagestring.php
+              (int)$char, 
+              (mixed)$curr_image, 
+              (int)$x , 
+              (int)$y, 
+              (file resource)$logfile
+            );
     
-	The main reason why I made them "pass-through" rather than hard coding them in the NewImage()
+    Description: 
+    
+    This function actually creates the images. 
+    
+    It is written with an iterative process in mind where more than a single training image (batch creation) would be generated however a single image can be generated if you prefer.
+    
+    I have created the GenerateTrainingImages() function that will call this function for you so you *could*
+    ignore this function but its the one that does the real work. 
+        
+    $char uses the chr() function to convert the number passed to an ASCII character.
+    
+    $curr_image is a mixed type variable used to name the image that is being generated. In this
+    case (i.e how I used it in GenerateTrainingImages()) I have used it as a number so it's easy to 
+    iterate over the image files using a simple for loop to programmatically create the images we
+    need however you could create an array of strings or chars and use those instead however that is
+    not quite as simple as the implementation shown here.
+    
+    $x & $y are direct pass-through variables for the x & y coordinate placement variables as defined
+    in the imagestring() function documentation: http://php.net/manual/en/function.imagestring.php
+    
+    The main reason why I made them "pass-through" rather than hard coding them in the NewImage()
     function is simply that you may want to vary or stagger the placement of the character within the images.
-	
-	$logfile is a file resource variable that points to the file that will log results of generating
-	the training images. You may want to use this file in later steps or for reference. Please note that 
-	NewImage() does not open its own access to the file so you will need to open the file resource yourself
-	prior to calling NewImage().
-	
-	
-	Example NewImage() Usage:
-	
-	// Create $logfile resource
-	$logfile = fopen("images/generate_images.log", "w") or die("Error: Unable to open: " . $logfile . '. Ending program.');
-	
-	// This will create a b/w image of an exclamation mark(!) named 0.png
-	NewImage(33, 0, 1, 0, $logfile);
-	
-	// Close log file 
+    
+    $logfile is a file resource variable that points to the file that will log results of generating
+    the training images. You may want to use this file in later steps or for reference. Please note that 
+    NewImage() does not open its own access to the file so you will need to open the file resource yourself
+    prior to calling NewImage().
+    
+    
+    Example NewImage() Usage:
+    
+    // Create $logfile resource
+    $logfile = fopen("images/generate_images.log", "w") or die("Error: Unable to open: " . $logfile . '. Ending program.');
+    
+    // This will create a b/w image of an exclamation mark(!) named 0.png
+    NewImage(33, 0, 1, 0, $logfile);
+    
+    // Close log file 
     fclose($logfile);
-	
-	
-	References:	   
-	   chr() - http://php.net/manual/en/function.chr.php
-	   imagecreate() - http://us.php.net/manual/en/function.imagecreate.php
-	   imagecolorallocate() - http://us.php.net/manual/en/function.imagecolorallocate.php
-	   imagestring() - http://us.php.net/manual/en/function.imagestring.php
-	   imagepng() - http://us.php.net/manual/en/function.imagepng.php
-	   imagedestroy() - http://us.php.net/manual/en/function.imagedestroy.php
-	   fwrite() - http://us.php.net/manual/en/function.fwrite.php
+    
+    
+    References:       
+       chr() - http://php.net/manual/en/function.chr.php
+       imagecreate() - http://us.php.net/manual/en/function.imagecreate.php
+       imagecolorallocate() - http://us.php.net/manual/en/function.imagecolorallocate.php
+       imagestring() - http://us.php.net/manual/en/function.imagestring.php
+       imagepng() - http://us.php.net/manual/en/function.imagepng.php
+       imagedestroy() - http://us.php.net/manual/en/function.imagedestroy.php
+       fwrite() - http://us.php.net/manual/en/function.fwrite.php
 */
 function NewImage($char, $curr_image, $x , $y, $logfile){
     /* Size the images */
     $width = 10; // px
     $height= 16; // px
-	
-	/* Set the filename */
+    
+    /* Set the filename */
     $file_name = $curr_image . '.png';
 
 
     /* Create the image resource 
-	
-	   Note: The @ operator is used to suppress any errors generated by php expressions. 
-	         http://us.php.net/manual/en/language.operators.errorcontrol.php
-			 
-	         I use it to suppress any errors from @imagecreate() and instead cast my own
-			 error message by adding an "or die()" to the @imagecreate() statement.
-	*/
+    
+       Note: The @ operator is used to suppress any errors generated by php expressions. 
+             http://us.php.net/manual/en/language.operators.errorcontrol.php
+             
+             I use it to suppress any errors from @imagecreate() and instead cast my own
+             error message by adding an "or die()" to the @imagecreate() statement.
+    */
     $image = @imagecreate($width, $height) or die("Error: Unable to Initialize Image Stream");
-	
-	
-	/* Add colors to the image resource	
-	   
-	   Note: colors are defined by the RBG color model
-	   https://en.wikipedia.org/wiki/RGB_color_model
+    
+    
+    /* Add colors to the image resource    
+       
+       Note: colors are defined by the RBG color model
+       https://en.wikipedia.org/wiki/RGB_color_model
 
-	   RGB Black: (0, 0, 0)
-	   RBG White: (255, 255, 255)	   
-	*/
+       RGB Black: (0, 0, 0)
+       RBG White: (255, 255, 255)       
+    */
     $background_color = imagecolorallocate($image, 0, 0, 0);
     $text_color = imagecolorallocate($image, 255, 255, 255);
-	
-	/* Add $char to the image resource */
+    
+    /* Add $char to the image resource */
     imagestring($image, 5, $x, $y,  chr($char), $text_color);
-	
+    
     /* Draw the image buffer stream to the file */
     imagepng($image, './images/' . $file_name);
-	
-	/* Free the memory associated with the $image resource by using imagedestroy() */
+    
+    /* Free the memory associated with the $image resource by using imagedestroy() */
     imagedestroy($image); 
 
     /* write to log file */ 
     fwrite($logfile, $curr_image . ' ' . chr($char). PHP_EOL);
-	
-	/* echo results and link to file for review */
-	echo "<a href='images/$curr_image.png' target='_blank'>" . $curr_image . ".png</a> - " . chr($char) . " ...complete.<br>" . PHP_EOL;
+    
+    /* echo results and link to file for review */
+    echo "<a href='images/$curr_image.png' target='_blank'>" . $curr_image . ".png</a> - " . chr($char) . " ...complete.<br>" . PHP_EOL;
 }
 
 
 
 /*
-	GenerateTrainingImages(
-	                        (NULL)
-	                      );
-	
-	Description:
-	
-	This function manages the creation of the training images. Call this function to create a new training set. 
+    GenerateTrainingImages(
+                            (NULL)
+                          );
+    
+    Description:
+    
+    This function manages the creation of the training images. Call this function to create a new training set. 
 
-	
-	Example GenerateTrainingImages() Usage:
-	
-	GenerateTrainingImages();
-	
-	
-	References:
-	file_exists() - http://us.php.net/manual/en/function.file-exists.php
-	mkdir() - http://us.php.net/manual/en/function.mkdir.php
-	fopen() - http://us.php.net/manual/en/function.fopen.php
-	fclose() - http://us.php.net/manual/en/function.fclose.php
+    
+    Example GenerateTrainingImages() Usage:
+    
+    GenerateTrainingImages();
+    
+    
+    References:
+    file_exists() - http://us.php.net/manual/en/function.file-exists.php
+    mkdir() - http://us.php.net/manual/en/function.mkdir.php
+    fopen() - http://us.php.net/manual/en/function.fopen.php
+    fclose() - http://us.php.net/manual/en/function.fclose.php
 */
 function GenerateTrainingImages() { 
 
@@ -137,8 +137,8 @@ function GenerateTrainingImages() {
     }
     else{ /* There is no "images" folder */
         echo "The images folder does not exists, creating one... ";
-		
-		/* try to create one with the correct folder permissions */
+        
+        /* try to create one with the correct folder permissions */
         if (!mkdir("images", 0755, true)) {
             die('fail! Ending program.'); /* Failed to create the folder */
         }else{
@@ -152,28 +152,28 @@ function GenerateTrainingImages() {
     /* Current number of generated images */    
     $curr_image = 0;
 
-	
+    
     /* 
         Training images set is defined in ASCII 
-		https://en.wikipedia.org/wiki/ASCII
-		
+        https://en.wikipedia.org/wiki/ASCII
+        
         start: ascii dec 33 (!) 
         stop:  ascii dec 126 (~) 
     */
-	
-	$start = 33;
-	$stop = 126;
-	$total = $stop - $start + 1; /* Add 1 because the count starts at 0 */
-	echo "Starting batch creation of " .  $total . " images.<br><br>" . PHP_EOL;
-	
+    
+    $start = 33;
+    $stop = 126;
+    $total = $stop - $start + 1; /* Add 1 because the count starts at 0 */
+    echo "Starting batch creation of " .  $total . " images.<br><br>" . PHP_EOL;
+    
     for($i = $start; $i <= $stop; $i++) {
         NewImage($i, $curr_image, 1, 0, $logfile);
         $curr_image++;
     }
-	echo "<br>Batch complete.<br>" . PHP_EOL;
-	echo "Log: <a href='images/generate_images.log' target='_blank'>generate_images.log</a><br>" . PHP_EOL;
+    echo "<br>Batch complete.<br>" . PHP_EOL;
+    echo "Log: <a href='images/generate_images.log' target='_blank'>generate_images.log</a><br>" . PHP_EOL;
     
-	
+    
     /* Close log file */
     fclose($logfile);
 }
