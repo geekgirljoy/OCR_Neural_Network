@@ -528,5 +528,5 @@ Please support me on [Patreon](https://www.patreon.com/user?u=3969727) so I can 
 
 If would like to suggest a topic or project for an upcoming post feel free to [contact me](https://geekgirljoy.wordpress.com/contact/).
 
-*Much Love,<br>
+Much Love,<br>
 ~Joy
