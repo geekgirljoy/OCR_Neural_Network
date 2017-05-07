@@ -274,8 +274,10 @@ Next we will convert the training images into training data that the OCR ANN can
 
 <?php
 /*
-    GenerateTrainingData();
-    
+    GenerateTrainingData(
+                            (NULL)
+                        );
+			      
     Description: 
         
     This function manages the image creation, call it to create a new image training set.
