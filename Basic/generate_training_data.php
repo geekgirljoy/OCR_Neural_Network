@@ -1,6 +1,8 @@
 <?php
 /*
-    GenerateTrainingData();
+    GenerateTrainingData(
+                            (NULL)
+                        );
     
     Description: 
         
