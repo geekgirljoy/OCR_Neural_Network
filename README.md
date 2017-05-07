@@ -516,7 +516,7 @@ echo 'All Done! Now run <a href="train_ocr.php">Train OCR</a><br>' . PHP_EOL;
     2. Each pattern of 1's and 0's will be assigned a floating point value between 0 and 1.
     3. All the encoded patterns and their values will be saved to a training data file for later use as inputs for the ANN.
 
-Now comes the real fun! In my next post we will train the OCR Neural Network and take it for a test drive! :-P
+Now comes the real fun! In my next post we will train the OCR Neural Network and take it for a test drive! 😛
 
 **Note:** *This project (all the code, the title images as well as the infographic licensed under everyone's favorite license [MIT LICENSE](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/LICENSE), though I am rather partial to CC0 :-P, so feel free to take this code and develop it into something amazing! Please just attribute me as the author of the initial code base. Also if you use this to create something cool, I'd love to hear about it!* :-)
 
