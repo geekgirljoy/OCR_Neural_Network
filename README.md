@@ -268,7 +268,7 @@ Next we will convert the training images into training data that the OCR ANN can
 
 
 &nbsp;
-### generate_training_data.php
+## generate_training_data.php
 
 ```php
 
