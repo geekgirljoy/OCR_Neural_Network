@@ -60,7 +60,7 @@ This ANN does not use convolution layers and will make a few mistakes from time 
 So now lets look at a sample training image as well as dive into the code to generate them!
 ![alt text](https://github.com/geekgirljoy/OCR_Neural_Network/blob/ca5dbcd3198dd36d2bbbbbc3731e450cac7ef7a4/Project%20Images/TrainingImageInfoGraphic.png)
 
-## generate_training_images.php
+## [generate_training_images.php](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/generate_training_images.php)
 
 ```php
 <?php
@@ -268,7 +268,7 @@ Next we will convert the training images into training data that the OCR ANN can
 
 
 &nbsp;
-## generate_training_data.php
+## [generate_training_data.php](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/generate_training_data.php)
 
 ```php
 
