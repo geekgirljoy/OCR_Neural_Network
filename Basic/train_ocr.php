@@ -1,6 +1,6 @@
 <?php
 
-set_time_limit ( 3600 ); // max run time 1 hour (adjust as needed)
+set_time_limit ( 300 ); // max run time 5 minutes (adjust as needed)
 
 $num_input = 160;
 $num_output = 1;
