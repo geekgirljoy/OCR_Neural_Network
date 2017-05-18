@@ -5,7 +5,7 @@ set_time_limit ( 300 ); // max run time 5 minutes (adjust as needed)
 $num_input = 160;
 $num_output = 1;
 $num_layers = 3;
-$num_neurons_hidden = 107; // 93
+$num_neurons_hidden = 107;
 $desired_error = 0.00001;
 $max_epochs = 5000000;
 $epochs_between_reports = 10;
