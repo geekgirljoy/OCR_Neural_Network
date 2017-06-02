@@ -1,5 +1,5 @@
 # OCR_Neural_Network
-![alt text](https://github.com/geekgirljoy/OCR_Neural_Network/blob/ca5dbcd3198dd36d2bbbbbc3731e450cac7ef7a4/Project%20Images/OCR.png)
+![OCR Logo](https://github.com/geekgirljoy/OCR_Neural_Network/blob/ca5dbcd3198dd36d2bbbbbc3731e450cac7ef7a4/Project%20Images/OCR.png)
 
 OCR is a practical example of Optical Character Recognition using [FANN](https://github.com/bukka/php-fann). While this example is limited and does make mistakes, the concepts illustrated by OCR can be applied to a more robust stacked network that uses feature extraction and convolution layers to recognize text of any font in any size image.
 
@@ -551,13 +551,249 @@ echo 'All Done! Now run <a href="test_ocr.php">Test OCR</a><br>' . PHP_EOL;
     3. The ANN is trained, saved and dumped from memory.
 
 
-Now comes the real fun! In my next post we will train the OCR Neural Network and take it for a test drive! 😛
+Now comes the real fun! Taking it out for a test drive! 😛
+
+
+Before proceeding here is the code we will be considering:
+test_ocr.php
+
+## [test_ocr.php](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/test_ocr.php)
+```
+
+<style>
+	.blue{color:blue;}
+	.green{color:green;}
+	.red{color:red;}
+</style>
+
+<?php
+/*
+    OCR( 
+	    (string) $img, 
+	    (char) $expected, 
+		(array) $input, 
+		(array)$lookup_array, 
+		(FANN neural network resource)$ann
+	   );
+	
+	Description: 
+	
+	With this function I simply try to illustrate how you could test the OCR ANN. 
+				
+	$img is a string that should be the name to the training image you are reading from. It is
+	used to output the image to the browser results.
+	
+	$expected is a char that you are actually testing for. eg  
+	
+	$input should be an array of inputs (encoded pixel data)
+	
+	$lookup_array should be an array of ASCII characters normalized as floating point values in increments of 0.01
+	
+	$ann should be a FANN neural network resource.
+	
+	References:   
+	   global - http://php.net/language.variables.scope
+	   PHP_EOL - http://php.net/manual/en/reserved.constants.php
+	   fann_run() - http://php.net/manual/en/function.fann-run.php
+	   floor() - http://php.net/manual/en/function.floor.php
+	   count() - http://php.net/manual/en/function.count.php
+*/
+function OCR($img, $expected, $input, $lookup_array, $ann) {
+	global $correct; // refer to the non local $correct variable
+	$output = ""; 
+	
+	/* Display image for reference */
+	$output .= "Image: <img src='images/$img'><br>" . PHP_EOL;
+
+	// Run the ANN
+	$calc_out = fann_run($ann, $input);
+	
+	$output .= 'Raw: ' .  $calc_out[0] . '<br>' . PHP_EOL;
+	$output .= 'Trimmed: ' . floor($calc_out[0]*100)/100 . '<br>' . PHP_EOL;
+	$output .= 'Decoded Symbol: ';
+	
+	/* What did the ANN think it saw? */
+	for($i = 0; $i < count($lookup_array); $i++) {
+       if( floor($lookup_array[$i][0]*100)/100 == floor($calc_out[0]*100)/100) {
+	        $output .= $lookup_array[$i][1] . '<br>' . PHP_EOL;
+	        $output .= "Expected: $expected <br>" . PHP_EOL;
+	        $output .= 'Result: ';
+	        if($expected == $lookup_array[$i][1]){
+	        	$output .= '<span class="green">Correct!</span>';
+				
+				++$correct;
+				
+	        }else{
+	        	$output .= '<span class="red">Incorrect!</span> <a href="train_ocr.php">Retrain OCR</a>';
+	        }
+		}
+	}
+	$output .= '<br><br>' . PHP_EOL;
+	
+	return $output;	
+}
+
+
+$total = 11; // How many images are to be tested
+$correct = 0; // The count of how many images were correctly read by the ANN
+
+
+/* Setup a resource that points to our ANN .net file */
+$train_file = (dirname(__FILE__) . '/ocr_float.net');
+
+/* Confirm the ANN exists */
+if (!is_file($train_file))
+	die('<span class="red">The file ocr_float.net has not been created!</span><a href="train_ocr.php">Train OCR</a>' . PHP_EOL);
+
+/* Create the ANN resource */
+$ocr_ann = fann_create_from_file($train_file);
+if ($ocr_ann) {
+	// Display the images we are testing (hard coded)
+	?>
+	<h1 class='blue'>OCR Test</h1>
+	<strong>Testing: </strong>
+	<img src='images/38.png'> <!-- G -->
+	<img src='images/68.png'> <!-- e -->
+	<img src='images/68.png'> <!-- e -->
+	<img src='images/74.png'> <!-- k -->
+	<img src='images/38.png'> <!-- G -->
+	<img src='images/72.png'> <!-- i -->
+	<img src='images/81.png'> <!-- r -->
+	<img src='images/75.png'> <!-- l -->
+	<img src='images/41.png'> <!-- J -->
+	<img src='images/78.png'> <!-- o -->
+	<img src='images/88.png'> <!-- y -->
+	<br>
+	<?php
+
+	/* 
+	    Create the lookup_array from ASCII
+		https://en.wikipedia.org/wiki/ASCII
+		
+        start: ascii dec 33 (!) 
+        stop:  ascii dec 126 (~) 
+    */
+	$result_lookup_array = array();
+	$curr = 0.00;
+	for($i = 33; $i <= 126; $i++) {
+		array_push($result_lookup_array, array($curr, chr($i)));
+		$curr+= 0.01;
+	}
+	
+
+	// For simplicity sake I hardcoded these values below as there is no need to prove that we can read
+	// the pixel data for each image (as we already did that in generate_training_data.php) however you 
+	// can implement similar methodology to what as I did with GenerateTrainingData() to read pixel values
+	// programmaticlly into an array rather than manually specifying it as I show here.
+	
+	$test_G = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_e = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_k = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_i = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_r = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_l = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_J = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_o = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	$test_y = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	
+       
+	/* Test OCR and buffer results in the $output variable as string data */
+	$output = "";
+	$output .= OCR('38.png', 'G', $test_G, $result_lookup_array, $ocr_ann);
+	$output .= OCR('68.png', 'e', $test_e, $result_lookup_array, $ocr_ann);
+	$output .= OCR('68.png', 'e', $test_e, $result_lookup_array, $ocr_ann);
+	$output .= OCR('74.png', 'k', $test_k, $result_lookup_array, $ocr_ann);
+	$output .= OCR('38.png', 'G', $test_G, $result_lookup_array, $ocr_ann);
+	$output .= OCR('72.png', 'i', $test_i, $result_lookup_array, $ocr_ann);
+	$output .= OCR('81.png', 'r', $test_r, $result_lookup_array, $ocr_ann);
+	$output .= OCR('75.png', 'l', $test_l, $result_lookup_array, $ocr_ann);
+	$output .= OCR('41.png', 'J', $test_J, $result_lookup_array, $ocr_ann);
+	$output .= OCR('78.png', 'o', $test_o, $result_lookup_array, $ocr_ann);
+	$output .= OCR('88.png', 'y', $test_y, $result_lookup_array, $ocr_ann);
+	
+    // Determine how accurate the Neural Network is
+    $percent_correct = round(($correct / $total) * 100, 2 );
+    
+	// Output the accuracy results
+	echo "<strong>Results:</strong> $correct images correctly decoded out of $total. (<span class='"; 
+	
+	/* Add a css style to the percentage results */
+	if($percent_correct < 70){echo "red'>";}
+	elseif($percent_correct < 90){echo "blue'>";}
+	else{echo "green'>";}
+	
+	/* Close css style span and offer link to retrain */
+	echo $percent_correct . "%</span>)<br>Not good enough? <a href='train_ocr.php'>Retrain OCR</a><br><br>" ;
+	
+	/* display detailed results */
+	echo "<h2 class='blue'>Details</h2>";
+	echo $output;
+	
+	/* Free up memory associated with the OCR ANN resource. */ 
+	fann_destroy($ocr_ann);
+} else {
+	die("<span class='red'>Invalid file format.</span>" . PHP_EOL);
+}
+
+?>
+
+```
+
+### If you run this code the following things will happen:
+
+    1. The images we are testing will display on page using HTML <img> elements.
+    2. Our neural network will be loaded from the file we created in step 3 of this tutorial.
+    3. 11 Tests using the OCR function I provide will be preformed.
+    4. The results of the ANN will be computed then displayed as an accuracy %.
+    5. Detailed results of each test result will be displayed.
+
+
+Now that we have tested the OCR ANN, lets break it down and understand what is going on.
+
+
+## Step 1 - generate_training_images.php
+
+In Step 1 we create our images and log file.
+
+![Step 1](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1.png)
+...
+![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1-2.png)
+
+
+## Step 2 - generate_training_data.php
+
+In Step 2 we use the log file as a reference to step through each image and examine every pixel and assign it a value of 1 or 0 based on the color of the pixel. We then save our results to a new file called ocr.data.
+
+![Step 2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step2.png)
+
+## Step 3 - train_ocr.php
+
+In Step 3 we train the neural network and save it as ocr_float.net.
+
+![Step 3](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step3.png)
+
+## Step 4 - test_ocr.php
+
+In Step 4 load the ANN from file ocr_float.net and then proceed to test it. In this image I ran multiple tests and excluded the individual image details however in the code I provided you will get additional data about each test image.
+
+![Step 4](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step4.png)
+
+At this point our toy OCR neural network is complete and operating as well as can be expected.
+
+Why is this a "toy" neural network? Because it is trained to "classify" or identify images in a single one off event rather than convolving (yes that is a real word :-P ) over the images and extracting features. Basically what this means is that while it eventually got a ~73% correct identification rate it's not actually going to read text out of just any image... not only that we broke the cardinal rule of testing our ANN with the same data we trained it on (always test on new data not what it was trained on) so the ANN is "hyper fitting" its data set.
+
+We could probably improve accuracy by moving the letters in the images, blurring them rotating them, changing their color and adding the ability for the ANN to work with more than black and white text etc... but in the end it would only be a marginal improvement.
+
+To use OCR for more real world scenarios you will need to implement convolution layers. Which will allow you to not only read the letters and words in an image of any size or color but also do object recognition such as test image 1 is a cat and test image 2 is a ti82 calculator...
+
+And with that I hope you had as much fun following along with this tutorial as much as I had creating it! :-)
+
+** Please support me on [Patreon](https://www.patreon.com/user?u=3969727) so I can bring you more awesome projects! **
+
 
 **Note:** *This project (all the code, the title images as well as the infographic licensed under everyone's favorite license [MIT LICENSE](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/LICENSE), though I am rather partial to CC0 :-P, so feel free to take this code and develop it into something amazing! Please just attribute me as the author of the initial code base. Also if you use this to create something cool, I'd love to hear about it!* :-)
 
-As always I hope you found this project both interesting and informative. Please Like, Comment &amp; Share this post with your friends and followers on your social media platforms and don't forget to click the follow button over on the top right of this page to get notified when I post something new.
-
-Please support me on [Patreon](https://www.patreon.com/user?u=3969727) so I can bring you more awesome projects!
+As always I hope you found this project both interesting and informative. Please Like, Comment &amp; Share this post with your friends and followers on your social media platforms.
 
 If would like to suggest a topic or project for an upcoming post feel free to [contact me](https://geekgirljoy.wordpress.com/contact/).
 
