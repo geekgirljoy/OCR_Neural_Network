@@ -5,8 +5,6 @@ OCR is a practical example of Optical Character Recognition using [FANN](https:/
 
 **At the end of this series of tutorials you will be able to build Neural Networks using PHP that can read characters from images! I will be giving you actual working code!**
 
-OCR is a practical example of Optical Character Recognition using [FANN](https://github.com/bukka/php-fann). While this example is limited and does make mistakes, the concepts illustrated by OCR can be applied to a more robust stacked network that uses feature extraction and convolution layers to recognize text of any font in any size image.
-
 As mentioned this will be a series of posts so that I don’t overwhelm you guys with too much information all at once and so I don’t have to sit here and type [ad infinitum](https://en.wikipedia.org/wiki/Ad_infinitum) (infinite recursion).
 
 😛
