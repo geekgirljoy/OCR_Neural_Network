@@ -757,7 +757,7 @@ In Step 1 we create our images and log file.
 
 ![Step 1](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1.png)
 ...
-![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1-2.png)
+![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1_2.png)
 
 
 ## Step 2 - generate_training_data.php
