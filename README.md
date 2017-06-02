@@ -756,7 +756,10 @@ Now that we have tested the OCR ANN, lets break it down and understand what is g
 In Step 1 we create our images and log file.
 
 ![Step 1](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1.png)
+
+&nbsp;
 ...
+&nbsp;
 ![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1_2.png)
 
 
