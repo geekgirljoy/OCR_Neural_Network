@@ -1,5 +1,5 @@
 # OCR_Neural_Network
-![OCR Logo](https://github.com/geekgirljoy/OCR_Neural_Network/blob/ca5dbcd3198dd36d2bbbbbc3731e450cac7ef7a4/Project%20Images/OCR.png)
+![OCR Logo](https://raw.githubusercontent.com/geekgirljoy/OCR_Neural_Network/master/Basic/Project%20Images/OCR.png)
 
 OCR is a practical example of Optical Character Recognition using [FANN](https://github.com/bukka/php-fann). While this example is limited and does make mistakes, the concepts illustrated by OCR can be applied to a more robust stacked network that uses feature extraction and convolution layers to recognize text of any font in any size image.
 
