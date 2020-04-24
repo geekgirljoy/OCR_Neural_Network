@@ -755,31 +755,31 @@ Now that we have tested the OCR ANN, lets break it down and understand what is g
 
 In Step 1 we create our images and log file.
 
-![Step 1](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1.png)
+![Step 1](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/Project%20Images/ocr_step1.png)
 
 &nbsp;
 ...
 &nbsp;
-![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step1_2.png)
+![Step 1-2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/Project%20Images/ocr_step1_2.png)
 
 
 ## Step 2 - generate_training_data.php
 
 In Step 2 we use the log file as a reference to step through each image and examine every pixel and assign it a value of 1 or 0 based on the color of the pixel. We then save our results to a new file called ocr.data.
 
-![Step 2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step2.png)
+![Step 2](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/Project%20Images/ocr_step2.png)
 
 ## Step 3 - train_ocr.php
 
 In Step 3 we train the neural network and save it as ocr_float.net.
 
-![Step 3](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step3.png)
+![Step 3](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/Project%20Images/ocr_step3.png)
 
 ## Step 4 - test_ocr.php
 
 In Step 4 load the ANN from file ocr_float.net and then proceed to test it. In this image I ran multiple tests and excluded the individual image details however in the code I provided you will get additional data about each test image.
 
-![Step 4](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Project%20Images/ocr_step4.png)
+![Step 4](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/Basic/Project%20Images/ocr_step4.png)
 
 At this point our toy OCR neural network is complete and operating as well as can be expected.
 
