@@ -32,10 +32,10 @@ $num_input = 392;
 $num_output = 10;
 
 $hidden_layers = array(1=>512 // First Hidden Layer - 256 neurons
-					   // Add More layers as needed (don't forget the commas)
+                       // Add More layers as needed (don't forget the commas)
                       );
 
-$layers = array($num_input, $hidden_layers,	$num_output);
+$layers = array($num_input, $hidden_layers, $num_output);
 $layers = FlattenANNLayers($layers);
 $num_layers = count($layers);
 
@@ -62,7 +62,7 @@ if($ann){
   echo "Inputs: $num_input" . PHP_EOL;
   echo 'Hidden Layers: ' . count($hidden_layers) . PHP_EOL;
   foreach($hidden_layers as $hidden_layer=>$neuron_count){
-	  echo "H$hidden_layer: $neuron_count" . PHP_EOL;
+      echo "H$hidden_layer: $neuron_count" . PHP_EOL;
   }
   echo "Outputs: $num_output" . PHP_EOL;
   echo str_repeat('-', 50) . PHP_EOL;
@@ -72,39 +72,39 @@ if($ann){
   // Check if pseudo_mse_result is greater than our desired_error
   // if so keep training so long as we are also under max_epochs
   while(($pseudo_mse_result > $desired_error) && ($current_epoch <= $max_epochs)){
-	  $current_epoch++;
-	  $epochs_since_last_save++; 
-	 
-	  // See: http://php.net/manual/en/function.fann-train-epoch.php
-	  // Train one epoch
-	  //
-	  // One epoch is where all of the training data is considered
-	  // exactly once.
-	  //
-	  // This function returns the MSE error as it is calculated
-	  // either before or during the actual training. This is not the
-	  // actual MSE after the training epoch, but since calculating this
-	  // will require to go through the entire training set once more.
-	  // It is more than adequate to use this value during training.
-	  $pseudo_mse_result = fann_train_epoch($ann, $train_data);
-	  
-	  echo "$name " . $current_epoch . ' : ' . $pseudo_mse_result . PHP_EOL; // report
-	   
-	  // If we haven't saved the ANN in a while...
-	  // and the current network is better then the previous best network
-	  // as defined by the current MSE being less than the last best MSE
-	  // Save it!
-	  if(($epochs_since_last_save >= $epochs_between_saves) && ($pseudo_mse_result < $best_mse)){
-	   
-		$best_mse = $pseudo_mse_result; // we have a new best_mse
-	   
-		// Save a Snapshot of the ANN
-		fann_save($ann, $path . DIRECTORY_SEPARATOR . "$name.train.net");
-		echo "Saved $name ANN." . PHP_EOL; // report the save
-		$epochs_since_last_save = 0; // reset the count
-		
-		fwrite($log, $pseudo_mse_result . PHP_EOL);
-	  }
+      $current_epoch++;
+      $epochs_since_last_save++; 
+     
+      // See: http://php.net/manual/en/function.fann-train-epoch.php
+      // Train one epoch
+      //
+      // One epoch is where all of the training data is considered
+      // exactly once.
+      //
+      // This function returns the MSE error as it is calculated
+      // either before or during the actual training. This is not the
+      // actual MSE after the training epoch, but since calculating this
+      // will require to go through the entire training set once more.
+      // It is more than adequate to use this value during training.
+      $pseudo_mse_result = fann_train_epoch($ann, $train_data);
+      
+      echo "$name " . $current_epoch . ' : ' . $pseudo_mse_result . PHP_EOL; // report
+       
+      // If we haven't saved the ANN in a while...
+      // and the current network is better then the previous best network
+      // as defined by the current MSE being less than the last best MSE
+      // Save it!
+      if(($epochs_since_last_save >= $epochs_between_saves) && ($pseudo_mse_result < $best_mse)){
+       
+        $best_mse = $pseudo_mse_result; // we have a new best_mse
+       
+        // Save a Snapshot of the ANN
+        fann_save($ann, $path . DIRECTORY_SEPARATOR . "$name.train.net");
+        echo "Saved $name ANN." . PHP_EOL; // report the save
+        $epochs_since_last_save = 0; // reset the count
+        
+        fwrite($log, $pseudo_mse_result . PHP_EOL);
+      }
  
   } // While we're training
 

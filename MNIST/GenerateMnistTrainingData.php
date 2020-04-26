@@ -172,21 +172,21 @@ echo 'Generating training and test data data from labels and images...' . PHP_EO
 // Generate  minst.train.data file from the images and labels
 GenerateDatasetFromLabeledImages($train_directory, 
                                 'minst_train_labels.txt',
-								$train_save_directory,
-								'minst.train.data', 
-								$layers,
-								$kernels, 
-								$pooling_method, 
-								$pooling_size);
+                                $train_save_directory,
+                                'minst.train.data', 
+                                $layers,
+                                $kernels, 
+                                $pooling_method, 
+                                $pooling_size);
 
-// Generate  minst.test.data file from the images and labels	
+// Generate  minst.test.data file from the images and labels    
 GenerateDatasetFromLabeledImages($test_directory, 
                                 'minst_test_labels.txt',
-                                $test_save_directory,								
-								'minst.test.data', 
-								$layers, 
-								$kernels, 
-								$pooling_method, 
-								$pooling_size);
+                                $test_save_directory,                                
+                                'minst.test.data', 
+                                $layers, 
+                                $kernels, 
+                                $pooling_method, 
+                                $pooling_size);
 
 echo 'All Done!' . PHP_EOL;
