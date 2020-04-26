@@ -9,7 +9,7 @@ include('Functions.php');
 
 
 // Training Variables
-$desired_error = 0.001; //0.025
+$desired_error = 0.001;
 $max_epochs = 500000;
 $current_epoch = 0;
 $epochs_between_saves = 5; // Minimum number of epochs between saves
@@ -31,7 +31,7 @@ $best_mse = $pseudo_mse_result; // keep the last best seen MSE network score her
 $num_input = 392;
 $num_output = 10;
 
-$hidden_layers = array(1=>512 // First Hidden Layer - 256 neurons
+$hidden_layers = array(1=>512 // First Hidden Layer - 512 neurons
                        // Add More layers as needed (don't forget the commas)
                       );
 
