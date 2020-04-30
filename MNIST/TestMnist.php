@@ -101,12 +101,12 @@ if ($ann) {
                 // Look up the position of the Highest value in the array
                 // it's key is the selection, in this case the actual digit
                 // but it could be cat/no cat, dog/cat, red/green/blue,
-                // lat/long, credit history, image contains licence place yes/no,
+                // lat/long, credit history, image contains license place yes/no,
                 // etc... whatever "classification" you assign the output to mean.
-                // as long as there is corilation between inputs and outputs... this
-                // should gennerally hold true so long as you process and train your 
-                // model properly, though some systems can be increadably complex
-                // requireing multiple layers of processing and stacked network layers
+                // as long as there is correlation between inputs and outputs... this
+                // should generally hold true so long as you process and train your 
+                // model properly, though some systems can be incredibly complex
+                // requiring multiple layers of processing and stacked network layers
                 // which are the so called "deep" neural networks.
                 
                 $ann_answer = array_search($calc_digit, $result);// The ANN answer
