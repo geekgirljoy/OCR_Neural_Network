@@ -16,5 +16,7 @@ Then train an ANN to return a float with the prediction / classification.
 
 
 ## MNIST
+![OCR 2 Logo](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/MNIST/Project%20Images/OCR2FeaturedWallpaper.jpg
+)
 
-**COMING SOON**
+[MNIST Code](https://github.com/geekgirljoy/OCR_Neural_Network/blob/master/MNIST/)
