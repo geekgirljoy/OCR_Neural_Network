@@ -109,7 +109,7 @@ function GenerateDatasetFromLabeledImages($directory, $labels_file, $save_data_d
                 imagedestroy($temp);
             }
 
-            // L4 Flatten Images into merged array
+            // Flatten Images into merged array
             while(is_array($flattened_images[array_key_first($flattened_images)])){
                 $flattened_images = call_user_func_array('array_merge', $flattened_images);
             }
@@ -123,7 +123,7 @@ function GenerateDatasetFromLabeledImages($directory, $labels_file, $save_data_d
                 // black 0 
                 // white 255
                 // Converted to a float:
-                // black 0.00
+                // black -1.00
                 // white 1.00
                 // so we can easily say if 
                 // it's less than 0.9 it zero
